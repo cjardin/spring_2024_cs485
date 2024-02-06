@@ -1,0 +1,36 @@
+{
+    "start_state" : "start",
+
+    "states" : {
+        
+        "start": {
+            "text" : "Get out of my swamp!<br>Do you go in?<br>A = YES B = NO",
+            "next_state" : [ 
+                               {
+                                    "state_name" : "go_in_swamp_stim",
+                                    "key_input"  : "A"
+                                },
+                                {
+                                    "state_name" : "kill",
+                                    "key_input"  :"B"
+                                }
+                            ]
+        },
+        "go_in_swamp_stim": {
+                        "next_state" : [ "go_in_swamp" ],
+                        "stim_change" : 10,
+                        "point_change" : 1 ,
+                        "image_change" : "<img src=\"lord_farquaad_shirtless_by_shrek4ever69_d9ya24f-414w-2x.jpg\">"
+                        },
+        "go_in_swamp" : {
+            "text" : "YOU DIE!!! And are now SHrek Shoes! And Toilet paper!! ",
+            "next_state" : "exit",
+            "dope_change" : 1
+        },
+        "kill" : {
+            "next_state" : "start",
+            "stim_change" : 1
+        }
+    }
+}
+
