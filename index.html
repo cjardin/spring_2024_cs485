@@ -5,11 +5,17 @@
 </head>
 <body>
 
+<div id="main" style="display:none">
 <div id="game_text" style="font-size:100px"></div>
-<div id="game_img">
-<div>
+<div id="game_img"></div>
 <button id="but_a" onclick="key_input('A');" style="font-size:100px" >A</button>
 <button id="but_b" onclick="key_input('B');" style="font-size:100px">B</button>
+</div>
+
+
+<div id="splash" style="font-size:100px"> Loading...<br>
+<img src="mario.gif">
+ </div>
 
 
 <script>
@@ -18,6 +24,11 @@ var current_state;
 
 var stim = 0;
 var points = 0;
+
+setTimeout(function(){
+            $('#splash').hide();
+            $('#main').show();
+            }, 5000);
 
 
 $.getJSON( "game.json", function( data ) {
