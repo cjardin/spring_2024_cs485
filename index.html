@@ -3,18 +3,24 @@
 <head>
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 </head>
-<body>
+<body style="background-image: url('imgs/background.gif');">
 
 <div id="main" style="display:none">
-<div id="game_text" style="font-size:100px"></div>
+<div id="game_text" style="font-size:100px;color:white"></div>
 <div id="game_img"></div>
 <button id="but_a" onclick="key_input('A');" style="font-size:100px" >A</button>
 <button id="but_b" onclick="key_input('B');" style="font-size:100px">B</button>
+<button id="but_c" onclick="key_input('C');" style="font-size:100px;display:none" >C</button>
+<button id="but_d" onclick="key_input('D');" style="font-size:100px;display:none">D</button>
 </div>
 
 
 <div id="splash" style="font-size:100px"> Loading...<br>
-<img src="mario.gif">
+<img src="imgs/mario.gif">
+ </div>
+
+<div id="splashy" style="font-size:100px;color:white;display:none"> Love Hhz<br>
+<img src="imgs/splashy.jpg">
  </div>
 
 
@@ -27,11 +33,16 @@ var points = 0;
 
 setTimeout(function(){
             $('#splash').hide();
-            $('#main').show();
-            }, 5000);
+            $('#splashy').show();
+                setTimeout(function(){
+                        $('#splashy').hide();
+                        $('#main').show();
+                    },3000);
+
+            }, 3000);
 
 
-$.getJSON( "game.json", function( data ) {
+$.getJSON( "data/game.json", function( data ) {
         game_data = data;
         current_state = data['start_state'];
         $('#game_text').html( game_data['states'][ data['start_state'] ]['text'] ); 
@@ -56,15 +67,28 @@ function next_state( state) {
         if (game_data['states'][ current_state ]['image_change'] != null){
             $("#game_img").html( game_data['states'][ current_state ]['image_change'] );
         }
+        if (game_data['states'][ current_state ]['show_button'] != null){
+            console.log('111');
+            console.log(game_data['states'][ current_state ]['show_button'])
+            $("#but_" + game_data['states'][ current_state ]['show_button']).show();
+        }
+
         next_state( game_data['states'][ current_state ]['next_state']) 
     }
 }
 
+function pick_a_winner( input_array ) {
+   return  input_array[(Math.floor(Math.random() * input_array.length))];
+}
 
 function key_input(what_key){
     for(i=0; i< game_data['states'][current_state]['next_state'].length; i++){
         if( what_key == game_data['states'][current_state]['next_state'][i]['key_input']) {
-            next_state(game_data['states'][current_state]['next_state'][i]['state_name'])
+            if ( typeof game_data['states'][current_state]['next_state'][i]['state_name'] == "string"){
+                next_state(game_data['states'][current_state]['next_state'][i]['state_name'])
+            }else{
+                next_state(pick_a_winner(game_data['states'][current_state]['next_state'][i]['state_name']) )
+            }
         } 
     }
 
