@@ -52,6 +52,13 @@ $.getJSON( "data/game.json", function( data ) {
 function next_state( state) {
     console.log("Current State = " + current_state + " --> New State= " + state) 
     current_state = state
+
+    if (game_data['states'][ current_state ]['play_sound'] != null){
+        var audioElement = document.createElement('audio');
+        audioElement.setAttribute('src', game_data['states'][ current_state ]['play_sound']);
+        audioElement.play();
+    }
+    
     if (game_data['states'][ current_state ]['text'] != null){
         $('#game_text').html( game_data['states'][ current_state ]['text'] );
     } else {
@@ -68,12 +75,23 @@ function next_state( state) {
             $("#game_img").html( game_data['states'][ current_state ]['image_change'] );
         }
         if (game_data['states'][ current_state ]['show_button'] != null){
-            console.log('111');
             console.log(game_data['states'][ current_state ]['show_button'])
             $("#but_" + game_data['states'][ current_state ]['show_button']).show();
         }
+        if (game_data['states'][ current_state ]['restart_cmd'] != null){
+            location.reload();
+        }
 
-        next_state( game_data['states'][ current_state ]['next_state']) 
+        if (game_data['states'][ current_state ]['delay'] == null){
+            next_state( game_data['states'][ current_state ]['next_state']) 
+        }else{
+            if (game_data['states'][ current_state ]['show_text'] != null){
+                $('#game_text').html( game_data['states'][ current_state ]['show_text'])
+            }
+            setTimeout(function() {
+                    next_state( game_data['states'][ current_state ]['next_state']) 
+                        }, game_data['states'][ current_state ]['delay']);
+        }
     }
 }
 

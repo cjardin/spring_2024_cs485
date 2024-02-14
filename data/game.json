@@ -24,9 +24,11 @@
                         "image_change" : "<img src=\"imgs/lord_farquaad_shirtless_by_shrek4ever69_d9ya24f-414w-2x.jpg\">"
                         },
         "go_in_swamp" : {
-            "text" : "YOU DIE!!! And are now SHrek Shoes! And Toilet paper!! ",
-            "next_state" : "exit",
-            "dope_change" : 1
+            "play_sound" : "sound/following.mp3",
+            "show_text" : "YOU DIE!!! And are now SHrek Shoes! And Toilet paper!! ",
+            "next_state" : "restart",
+            "dope_change" : 1,
+            "delay": 10000
         },
         "run" : { 
             "text" : "Run for your life you little screaming toad",
@@ -36,7 +38,10 @@
         "kill" : {
             "next_state" : "start",
             "stim_change" : 1
-        }
+        },
+        "restart" : { 
+            "restart_cmd" : true 
+        } 
     }
 }
 
