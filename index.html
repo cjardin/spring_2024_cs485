@@ -4,8 +4,13 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 </head>
 <body style="">
-<canvas style="border:1px solid #000000;">
+<canvas id='mycanvas' style="display:none;border:1px solid #000000;">
 </canvas>
+
+<div id="splash" style="font-size:100px"> Loading...<br>
+<img src="imgs/mario.gif">
+</div>
+
 
 <script>
 const canvas = document.querySelector("canvas");
@@ -32,6 +37,9 @@ $.getJSON( "data/map.json", function( data ) {
 function all_loaded(){
     draw(game_data['states']['0,0']['bk_img_loaded']); 
     console.log(current_state);
+    $('#splash').hide();
+    $('#mycanvas').show();
+    
 }
 
 function load_imgs(){
@@ -58,13 +66,52 @@ document.body.onkeydown = function(e){
     if(e.keyCode == up_arrow){
         cur_pos_x = cur_pos_x +1;
     }
-    
-    alert(String.fromCharCode(e.keyCode)+" --> "+e.keyCode);
+   //alert(String.fromCharCode(e.keyCode)+" --> "+e.keyCode);
+    key_input(e.keyCode)
+
 };
+
+function key_input(what_key){
+    for(i=0; i< game_data['states'][current_state]['next_state'].length; i++){
+        if( what_key == game_data['states'][current_state]['next_state'][i]['key_input']) {
+            if ( typeof game_data['states'][current_state]['next_state'][i]['state_name'] == "string"){
+               next_state(game_data['states'][current_state]['next_state'][i]['state_name'])
+            }
+        } 
+    }
+
+    console.log(what_key);
+}
+
+function next_state( state) {
+    console.log("Current State = " + current_state + " --> New State= " + state) 
+    current_state = state
+
+    draw(game_data['states'][current_state]['bk_img_loaded'])
+    if(game_data['states'][current_state]['other_imgs'] != null){
+        for(i=0; i<game_data['states'][current_state]['other_imgs'].length;i++){
+            console.log( game_data['states'][current_state]['other_imgs'][i]['src']);
+            draw_src( game_data['states'][current_state]['other_imgs'][i]['src'],
+                    game_data['states'][current_state]['other_imgs'][i]['x_cord'],
+                    game_data['states'][current_state]['other_imgs'][i]['y_cord'],
+                    game_data['states'][current_state]['other_imgs'][i]['width'],
+                    game_data['states'][current_state]['other_imgs'][i]['height']);
+        }
+    }
+}
 
 function draw(img) {
   var ctx = canvas.getContext('2d');
-  ctx.drawImage(img, -100, -100,  canvas.width-20,  canvas.height-20  );
+  ctx.drawImage(img, 0, 0,  canvas.width,  canvas.height  );
+}
+
+function draw_src(src, x, y, w, h) {
+  var ctx = canvas.getContext('2d');
+  var img = new Image();
+  img.onload = function() {
+    ctx.drawImage(img, x, y, w, h);
+  };
+  img.src = src;
 }
 
 
