@@ -5,6 +5,7 @@
         
         "start": {
             "text" : "Get out of my swamp!<br>Do you go in?<br>A = YES B = NO",
+            "bk_img" : "imgs/background.gif",
             "next_state" : [ 
                                {
                                     "state_name" : "go_in_swamp_stim",
