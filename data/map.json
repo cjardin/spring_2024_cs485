@@ -1,0 +1,49 @@
+{
+    "start_state" : "0,0",
+
+    "states" : { 
+    
+        "0,0": {
+            "bk_img" : "walk_imgs/pos_1_a.jpg",
+            "other_imgs": [ {
+                                "src" : "imgs/tomato.gif",
+                                "x_cord" : 100,
+                                "y_cord" : 100,
+                                "width" : 500,
+                                "height" : 500
+                            }
+                        ],
+            "next_state" : [ {
+                                "state_name": "0,1",
+                                "key_input" : 38
+                             },
+                             { 
+                                "state_name": "0,0-b",
+                                "key_input" : 39
+                             }
+                            ]
+        },
+        "0,0-b": {
+            "bk_img" : "walk_imgs/pos_1_b.jpg",
+            "next_state" : [ { 
+                                "state_name": "0,0",
+                                "key_input" : 37
+                             }
+                            ]   
+        },
+        "0,1": {
+            "bk_img" : "walk_imgs/pos_2_a.jpg",
+            "next_state" : [ { 
+                                "state_name": "0,1",
+                                "key_input" : 38
+                             },
+                             { 
+                                "state_name": "0,0",
+                                "key_input" : 40
+                             }
+   
+                            ]   
+        } 
+    }
+}
+

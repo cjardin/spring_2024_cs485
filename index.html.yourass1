@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+</head>
+<body style="background-image: url('imgs/background.gif');">
+
+<div id="main" style="display:none">
+<div id="game_text" style="font-size:100px;color:white"></div>
+<div id="game_img"></div>
+<button id="but_a" onclick="key_input('A');" style="font-size:100px" >A</button>
+<button id="but_b" onclick="key_input('B');" style="font-size:100px">B</button>
+<button id="but_c" onclick="key_input('C');" style="font-size:100px;display:none" >C</button>
+<button id="but_d" onclick="key_input('D');" style="font-size:100px;display:none">D</button>
+</div>
+
+
+<div id="splash" style="font-size:100px"> Loading...<br>
+<img src="imgs/mario.gif">
+ </div>
+
+<div id="splashy" style="font-size:100px;color:white;display:none"> Love Hhz<br>
+<img src="imgs/splashy.jpg">
+ </div>
+
+
+<script>
+var game_data;
+var current_state;
+
+var stim = 0;
+var points = 0;
+
+setTimeout(function(){
+            $('#splash').hide();
+            $('#splashy').show();
+                setTimeout(function(){
+                        $('#splashy').hide();
+                        $('#main').show();
+                    },3000);
+
+            }, 3000);
+
+
+$.getJSON( "data/game.json", function( data ) {
+        game_data = data;
+        current_state = data['start_state'];
+        $('#game_text').html( game_data['states'][ data['start_state'] ]['text'] ); 
+
+});
+
+function next_state( state) {
+    console.log("Current State = " + current_state + " --> New State= " + state) 
+    current_state = state
+
+    if (game_data['states'][ current_state ]['play_sound'] != null){
+        var audioElement = document.createElement('audio');
+        audioElement.setAttribute('src', game_data['states'][ current_state ]['play_sound']);
+        audioElement.play();
+    }
+    
+    if (game_data['states'][ current_state ]['text'] != null){
+        $('#game_text').html( game_data['states'][ current_state ]['text'] );
+    } else {
+        console.log("no text");
+        if (game_data['states'][ current_state ]['stim_change'] != null){
+            console.log("+ stim " + game_data['states'][ current_state ]['stim_change'] ) 
+            stim = stim + game_data['states'][ current_state ]['stim_change']
+        }
+        if (game_data['states'][ current_state ]['point_change'] != null){
+            console.log("+ point " + game_data['states'][ current_state ]['stim_change'] ) 
+            points = points + game_data['states'][ current_state ]['point_change']
+        }
+        if (game_data['states'][ current_state ]['image_change'] != null){
+            $("#game_img").html( game_data['states'][ current_state ]['image_change'] );
+        }
+        if (game_data['states'][ current_state ]['show_button'] != null){
+            console.log(game_data['states'][ current_state ]['show_button'])
+            $("#but_" + game_data['states'][ current_state ]['show_button']).show();
+        }
+        if (game_data['states'][ current_state ]['restart_cmd'] != null){
+            location.reload();
+        }
+
+        if (game_data['states'][ current_state ]['delay'] == null){
+            next_state( game_data['states'][ current_state ]['next_state']) 
+        }else{
+            if (game_data['states'][ current_state ]['show_text'] != null){
+                $('#game_text').html( game_data['states'][ current_state ]['show_text'])
+            }
+            setTimeout(function() {
+                    next_state( game_data['states'][ current_state ]['next_state']) 
+                        }, game_data['states'][ current_state ]['delay']);
+        }
+    }
+}
+
+function pick_a_winner( input_array ) {
+   return  input_array[(Math.floor(Math.random() * input_array.length))];
+}
+
+function key_input(what_key){
+    for(i=0; i< game_data['states'][current_state]['next_state'].length; i++){
+        if( what_key == game_data['states'][current_state]['next_state'][i]['key_input']) {
+            if ( typeof game_data['states'][current_state]['next_state'][i]['state_name'] == "string"){
+                next_state(game_data['states'][current_state]['next_state'][i]['state_name'])
+            }else{
+                next_state(pick_a_winner(game_data['states'][current_state]['next_state'][i]['state_name']) )
+            }
+        } 
+    }
+
+    console.log(what_key);
+}
+</script>
+</body>
+</html>
