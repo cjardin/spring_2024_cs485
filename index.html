@@ -15,16 +15,22 @@
 <script>
 const canvas = document.querySelector("canvas");
 
-function resize(){
-  canvas.width = window.innerWidth -20;
-  canvas.height = window.innerHeight -20;
-}
-
 resize()
 window.addEventListener('resize', resize)
 
 var current_state;
 var game_data;
+
+function resize(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  try{
+    draw(game_data['states'][current_state]['bk_img_loaded']);
+  }catch(err){
+   }
+
+}
 
 $.getJSON( "data/map.json", function( data ) {
         game_data = data;
@@ -77,6 +83,7 @@ function key_input(what_key){
             if ( typeof game_data['states'][current_state]['next_state'][i]['state_name'] == "string"){
                next_state(game_data['states'][current_state]['next_state'][i]['state_name'])
             }
+            break
         } 
     }
 
@@ -102,7 +109,7 @@ function next_state( state) {
 
 function draw(img) {
   var ctx = canvas.getContext('2d');
-  ctx.drawImage(img, 0, 0,  canvas.width,  canvas.height  );
+  ctx.drawImage(img, -500, -500,  canvas.width +500,  canvas.height+500 );
 }
 
 function draw_src(src, x, y, w, h) {
