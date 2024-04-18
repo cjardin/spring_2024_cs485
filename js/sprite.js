@@ -15,9 +15,10 @@ class Sprite {
         this.y_v = 0;
     }
 
-    draw(){
+    draw(state){
         var ctx = canvas.getContext('2d');
         //console.log(this.sprite_json[this.root_e][this.state][this.cur_frame]['w']);
+        console.log(state['key_change']);
 
         if(this.sprite_json[this.root_e][this.state][this.cur_frame]['img'] == null){
             console.log("loading");
@@ -54,6 +55,8 @@ class Sprite {
             this.x = this.x + this.x_v;
             this.y = this.y + this.y_v;
         }
+
+        return false;
         
     }
 

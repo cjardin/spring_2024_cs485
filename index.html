@@ -47,17 +47,22 @@
         
         var background_length = sprites_to_draw[0].length;
         var forground_length  = sprites_to_draw[1].length;
+        var has_background_changed = false;
+
         const context = canvas.getContext('2d');
         //context.clearRect(0, 0, canvas.width, canvas.height);
 
         //Draw background sprites
         for(var i = 0; i < background_length; i++){
-            sprites_to_draw[0][i].draw();
+            has_background_changed = sprites_to_draw[0][i].draw();
         }
 
         //Draw forground sprites
         for(var i = 0; i < forground_length; i++){
-            sprites_to_draw[1][i].draw();
+            sprites_to_draw[1][i].draw( { 'has_background_changed' : has_background_changed,
+                                          'key_change' : false
+                                        }
+            );
         }
     }
 
