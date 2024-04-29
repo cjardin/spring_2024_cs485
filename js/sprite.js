@@ -5,7 +5,7 @@ class Sprite {
         this.x = x;
         this.y = y;
         this.state = start_state;
-        this.root_e = "TenderBud";
+        this.root_e = "Sonic";
 
         this.cur_frame = 0;
 
@@ -23,7 +23,7 @@ class Sprite {
         if(this.sprite_json[this.root_e][this.state][this.cur_frame]['img'] == null){
             console.log("loading");
             this.sprite_json[this.root_e][this.state][this.cur_frame]['img'] = new Image();
-            this.sprite_json[this.root_e][this.state][this.cur_frame]['img'].src = 'Penguins/' + this.root_e + '/' + this.state + '/' + this.cur_frame + '.png';
+            this.sprite_json[this.root_e][this.state][this.cur_frame]['img'].src = 'Sonic/' + this.root_e + '/' + this.state + '/' + this.cur_frame + '.png';
         }
 
         if( this.cur_bk_data != null){
@@ -43,7 +43,15 @@ class Sprite {
             this.cur_frame = 0;
         }
 
-        if(this.x >= (window.innerWidth - this.sprite_json[this.root_e][this.state][this.cur_frame]['w']) ){
+        var map_context = offscreen.getContext('2d');
+        var data = map_context.getImageData(this.x + this.sprite_json[this.root_e][this.state][this.cur_frame]['w'] , 
+            this.y, 1, 1).data;
+        var rgb = [ data[0], data[1], data[2] ];
+
+        console.log(rgb);
+        if(data[0] == 255 && data[1] == 0 && data[2] ==0){
+            this.bound_hit('F'); 
+        }else if(this.x >= (window.innerWidth - this.sprite_json[this.root_e][this.state][this.cur_frame]['w']) ){
             this.bound_hit('E');
         }else if(this.x <= 0){
             this.bound_hit('W');
@@ -65,12 +73,13 @@ class Sprite {
         this.y_v = 0;
         const idle_state = ["idle","idleBackAndForth","idleBreathing","idleFall","idleLayDown","idleLookAround","idleLookDown","idleLookLeft","idleLookRight","idleLookUp","idleSit","idleSpin","idleWave"];
 
-        const random = Math.floor(Math.random() * idle_state.length);
-        console.log(idle_state[random]);
-        this.state = idle_state[random];
+        //const random = Math.floor(Math.random() * idle_state.length);
+        //console.log(idle_state[random]);
+        this.state = 'idle'; // idle_state[random];
     }
 
     bound_hit(side){
+            console.log(side);
             this.set_idle_state();
    } 
 

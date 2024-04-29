@@ -14,17 +14,19 @@
 
 <script>
     const canvas = document.querySelector("canvas");
+    const offscreen = new OffscreenCanvas(256, 256);
     const sprites_to_draw = new Array(2); 
     var draw_loop_timeout;
     var img = new Image();
+    var color_map = new Image();
     
     sprites_to_draw[0] = new Array(0); //background and 
     sprites_to_draw[1] = new Array(0); //forground
 
-    $.getJSON( "Penguins/animationData.json", function( data ) {
+    $.getJSON( "Sonic/animationData.json", function( data ) {
         //sprites_to_draw[1].push( new Sprite(data, 0 ,0, "idleSpin") );
         //sprites_to_draw[1].push( new Sprite(data, 100 ,100, "idleWave") );
-        sprites_to_draw[1].push( new Sprite(data, 150 ,600, "walk_E") );
+        sprites_to_draw[1].push( new Sprite(data, 150 ,650, "idle") );
 
     });
 
@@ -37,13 +39,31 @@
             var ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         };
-        img.src = 'imgs/bk.jpg';
+        img.src = 'imgs/bk_lord.jpg';
+
+      
+        color_map.onload = function() {
+            var ctx = offscreen.getContext('2d');
+            ctx.drawImage(color_map, 0, 0, canvas.width, canvas.height);
+        };
+        color_map.src = 'imgs/bk_lord.png';
+     
         draw_loop_timeout = setInterval(draw_loop, 33);
     });
 
-    window.addEventListener('resize', resize);
+    //window.addEventListener('resize', resize);
+
+    let start, previousTimeStamp;
 
     function draw_loop(){
+
+        if (start === undefined) {
+            start = Date.now();
+        }else if ( (Date.now() - start) < 100){
+            requestAnimationFrame(draw_loop);
+            return;
+        };
+        start = Date.now();
         
         var background_length = sprites_to_draw[0].length;
         var forground_length  = sprites_to_draw[1].length;
@@ -64,11 +84,15 @@
                                         }
             );
         }
+        requestAnimationFrame(draw_loop);
     }
 
     function resize(){
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+
+        offscreen.width = window.innerWidth;
+        offscreen.height = window.innerHeight;
 
     }
 </script>
