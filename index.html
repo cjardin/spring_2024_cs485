@@ -30,17 +30,22 @@
 
     });
 
+    $.getJSON( "acid_bk/animationData.json", function( data ) {
+        sprites_to_draw[0].push( new BackgroundSprite(data) );
+    });
+
 
     $( document ).ready(function() {
         console.log( "Page is now ready" );
         resize();
 
+        /*(
         img.onload = function() {
             var ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         };
         img.src = 'imgs/bk_lord.jpg';
-
+        */
       
         color_map.onload = function() {
             var ctx = offscreen.getContext('2d');

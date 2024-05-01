@@ -1,3 +1,35 @@
+class BackgroundSprite{
+
+    constructor(sprite_json){
+        this.sprite_json = sprite_json;
+        this.state = 'idle';
+
+        this.root_e = "acid_bk";
+        this.cur_frame = 0;
+        this.x = 0;
+        this.y = 0;
+
+    }
+    draw(state){
+        var ctx = canvas.getContext('2d');
+        if(this.sprite_json[this.root_e][this.state][this.cur_frame]['img'] == null){
+            console.log("loading Bk");
+            this.sprite_json[this.root_e][this.state][this.cur_frame]['img'] = new Image();
+            this.sprite_json[this.root_e][this.state][this.cur_frame]['img'].src = 'acid_bk/' + this.root_e + '/' + this.state + '/' + this.cur_frame + '.png';
+        }
+
+        ctx.drawImage(this.sprite_json[this.root_e][this.state][this.cur_frame]['img'], 
+                this.x, this.y, window.innerWidth, window.innerHeight );
+
+        this.cur_frame = this.cur_frame + 1;
+        if(this.cur_frame >= this.sprite_json[this.root_e][this.state].length){
+            this.cur_frame = 0;
+        }
+
+        return true;
+    }
+}
+
 //Parent Sprit Classa
 class Sprite {
     constructor(sprite_json, x, y, start_state){
@@ -26,7 +58,7 @@ class Sprite {
             this.sprite_json[this.root_e][this.state][this.cur_frame]['img'].src = 'Sonic/' + this.root_e + '/' + this.state + '/' + this.cur_frame + '.png';
         }
 
-        if( this.cur_bk_data != null){
+        if( this.cur_bk_data != null && state['has_background_changed'] == false){
             ctx.putImageData(this.cur_bk_data , (this.x - this.x_v) , (this.y - this.y_v));
         }
 
